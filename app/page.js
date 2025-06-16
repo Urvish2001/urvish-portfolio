@@ -1,103 +1,84 @@
-import Image from "next/image";
+import React from "react";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <main className="min-h-screen bg-white text-gray-900 p-6">
+      <section className="max-w-4xl mx-auto py-12">
+        <h1 className="text-4xl font-bold mb-4">Urvish Shah</h1>
+        <p className="text-lg mb-6">Robotics Engineer | Embedded Systems | Multi-Agent Control</p>
+        <a href="mailto:shahurvish2001@gmail.com" className="text-blue-600 underline">
+          Contact Me
+        </a>
+      </section>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <section className="max-w-4xl mx-auto py-8">
+        <h2 className="text-2xl font-semibold mb-4">About Me</h2>
+        <p>
+          I’m a Robotics graduate student at University at Buffalo, focused on multi-robot systems, RL, and embedded control.
+          I build adaptive, collaborative robot behaviors using RL (MADDPG) in ROS/Gazebo, integrating sensors like IMUs and force sensors.
+        </p>
+      </section>
+
+      <section className="max-w-4xl mx-auto pt-8 pb-0">
+        <h2 className="text-2xl font-semibold mb-4">Robocon Journey</h2>
+        <div className="border p-4 rounded-xl shadow-sm space-y-4">
+          <h3 className="font-bold text-xl">Robocon India & ABU Robocon – Journey from Trainee to International Finalist</h3>
+          <p className="text-sm text-gray-600">
+            <strong>Technologies:</strong> PCB Design, Pneumatics, Direct Air Pressure Launching, Mechanical CAD, DCV Valves, Pressure Regulation
+          </p>
+          <p>
+            I began my Robocon journey in my second semester (2020) with hands-on training in electronics and mechanical fabrication. We participated in DD Robocon organized by IIT Delhi, where we built two robots — a Target Robot and a Defensive Robot — to throw arrows into dynamic and static pots placed at varying heights.
+          </p>
+          <p>
+            We developed two launching mechanisms:
+            <ul className="list-disc ml-6 mt-1">
+              <li><strong>Direct Air Pressure (DAP):</strong> Used controlled air pressure and rotation from 30° to 150° to shoot arrows at precise distances.</li>
+              <li><strong>Pneumatic Jerk Mechanism:</strong> Used gripper release with DCV valve-regulated pressure for precise jerks.</li>
+            </ul>
+          </p>
+          <p>
+            Our team achieved 1st and 2nd runner-up positions nationally — the first team in 19 years to do so with two separate robot systems. We represented India in ABU Robocon 2021 in Jimo, China and secured 9th rank among global teams.
+          </p>
+          <p>
+            Post-competition, we trained over 200 students, mentoring the next Robocon generation.
+          </p>
+
+          <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              <img src="/images/International_certificate.jpg" alt="International Certificate" className="rounded object-contain h-64 w-full bg-white" />
+              <img src="/images/Sankul_day_certificate.jpg" alt="University Certificate" className="rounded object-cover h-64 w-full" />
+              <img src="/images/Awards_photo.jpg" alt="Field Demo" className="rounded object-cover h-64 w-full" />
+              <img src="/images/DAP_photo.JPG" alt="Arrow Launchers Robots" className="rounded object-cover h-64 w-full" />
+              <img src="/images/Passing_and_catching.jpg" alt="Robo Rugby Robots" className="rounded object-cover h-64 w-full" />
+              <img src="/images/team_photo_with_robot.JPG" alt="Indoor Robocon team" className="rounded object-cover h-64 w-full" />
+            </div>
+
+            <div className="grid grid-cols-3 gap-4 items-start mt-2">
+              <div className="col-span-2 h-[450px] bg-white p-2 rounded flex justify-center items-center">
+                <img
+                  src="/images/Cad_photo.png"
+                  alt="Updated CAD Design"
+                  className="h-full object-contain rotate-270"
+                />
+              </div>
+              <div className="h-[450px] bg-white p-2 rounded flex justify-center items-center">
+                <img
+                  src="/images/PCB_design.JPG"
+                  alt="Custom PCB Design"
+                  className="h-full object-contain"
+                />
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
+      </section>
+
+      <section className="max-w-4xl mx-auto pt-4 pb-4">
+        <h2 className="text-2xl font-semibold mb-4">Resume</h2>
+        <a href="/Urvish_cv.pdf" download className="text-blue-600 underline">
+          Download Resume
         </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </section>
+    </main>
   );
 }
