@@ -73,6 +73,33 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="max-w-4xl mx-auto py-8">
+        <h2 className="text-2xl font-semibold mb-4">Advanced Scarecrow 2.0</h2>
+        <div className="border p-4 rounded-xl shadow-sm space-y-4">
+          <p>
+            <strong>Advanced Scarecrow 2.0</strong> is an innovative, sensor-based system developed by me and my team of four to help farmers protect crops from stray animals—without causing them harm. It's a modern reinvention of the traditional scarecrow, combining low-cost hardware with smart sensing and communication.
+          </p>
+          <p>
+            Our system uses <strong>PIR sensors</strong> to detect animal movement, <strong>moisture sensors</strong> to monitor soil health, and <strong>rain sensors</strong> to detect rainfall. These inputs are processed by an <strong>Arduino-based microcontroller</strong>, which controls a buzzer to emit a high-frequency sound that repels animals in a non-harmful way. For alerts, a <strong>SIM800L GSM module</strong> sends emergency messages directly to the farmer’s phone.
+          </p>
+          <p>
+            To ensure energy independence in remote locations, we integrated a <strong>solar panel and rechargeable battery</strong>, making the unit self-sufficient and field-ready.
+          </p>
+          <p>
+            Our prototype demonstrated over <strong>80% effectiveness</strong> in field tests. We presented the project at an <strong>Ideathon organized by the Entrepreneurship Cell in collaboration with IIT Bombay</strong>, where it won the <strong>runner-up prize</strong> for its practical impact and innovation.
+          </p>
+          <p className="text-sm text-gray-600">
+            <strong>Technologies:</strong> Arduino, GSM SIM800L, PIR & Rain Sensors, Moisture Sensor, Solar Panel, Embedded C
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+            <img src="/images/Scarecrow_animated_photo.png" alt="Advanced Scarecrow Conceptual Diagram" className="rounded object-contain bg-white h-64 w-full" />
+            <img src="/images/Scarecrow_team.png" alt="Advanced Scarecrow Team Photo with actual model " className="rounded object-contain bg-white h-64 w-full" />
+            <img src="/images/Scarecrow_Circuit.png" alt="Hardware prototype" className="rounded object-contain bg-white h-64 w-full" />
+            <img src="/images/SMS_alert_screenshot.png" alt="SMS alert screenshot" className="rounded object-contain bg-white h-64 w-full" />
+          </div>
+        </div>
+      </section>
+
       <section className="max-w-4xl mx-auto pt-4 pb-4">
         <h2 className="text-2xl font-semibold mb-4">Resume</h2>
         <a href="/Urvish_cv.pdf" download className="text-blue-600 underline">
