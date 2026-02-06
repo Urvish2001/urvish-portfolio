@@ -67,6 +67,7 @@ function VideoOrPlaceholder({ src, poster, className }) {
       poster={poster}
       onError={() => setBad(true)}
     >
+
       <source src={src} />
       Your browser does not support the video tag.
     </video>
@@ -100,8 +101,8 @@ function MediaGrid({ items = [] }) {
 
 function Section({ id, title, subtitle, children }) {
   return (
-    <section id={id} className="max-w-6xl mx-auto px-4 py-14">
-      <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">{title}</h2>
+    <section id={id} className="max-w-5xl mx-auto px-4 py-10">
+      <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>
       {subtitle ? (
         <p className="mt-1 text-sm text-gray-600 leading-relaxed">{subtitle}</p>
       ) : null}
@@ -536,14 +537,14 @@ export default function Home() {
   );
 
   return (
-    <main id="top" className="min-h-screen bg-sky-50 text-gray-900 text-[15px] md:text-[16px]">
+    <main id="top" className="min-h-screen bg-sky-50 text-gray-900">
       <Navbar />
 
       {/* HERO */}
-      <section className="max-w-6xl mx-auto px-4 py-14">
+      <section className="max-w-5xl mx-auto px-4 py-10">
         <div className="rounded-2xl border border-gray-200 bg-white p-7 shadow-sm">
-          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight">
-            Robotics / Mechatronics / Embedded Engineer
+          <h1 className="text-3xl font-semibold tracking-tight">
+            Robotics Engineer
           </h1>
           <p className="mt-3 text-sm text-gray-700 leading-relaxed max-w-3xl">
             Robotics engineer with hands-on experience across embedded hardware, multi-robot autonomy,
