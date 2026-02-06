@@ -251,7 +251,7 @@ export default function Home() {
 
   const mediaTransport = useMemo(
     () => [
-      { type: "video", src: "/videos/transport_demo.mp4", poster: "/images/transport_poster.jpg" },
+      { type: "video", src: "/videos/COLO_TRANS/transport_demo.mp4", poster: "/images/transport_poster.jpg" },
       { type: "image", src: "/images/transport_gazebo.png", alt: "Gazebo multi-robot transport" },
       { type: "image", src: "/images/transport_real.png", alt: "Real-world multi-robot transport (TB3 Burger)" },
     ],
