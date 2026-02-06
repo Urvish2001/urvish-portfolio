@@ -447,19 +447,62 @@ export default function Home() {
   const publications = useMemo(
     () => [
       {
-        title: "Add your publication title here",
-        venue: "Conference / Journal / Workshop",
-        year: "YYYY",
-        authors: "Urvish Shah, ...",
-        notes: "1–2 lines in plain engineering language: what the work contributes and what you built/validated.",
+        title:
+          "Sustainable recycling of ABS: comprehensive thermophysical characterisation in filament- versus granules-based 3D printing pathways across multiple reprocessing cycles",
+        venue: "Rapid Prototyping Journal (Emerald)",
+        year: "2025",
+        authors: "Rajdeep Singh Devra, Urvish Shah, Madhu Vadali",
+        notes:
+          "Compared filament-based vs direct granule-based 3D printing of recycled ABS across multiple reprocessing cycles using thermophysical characterization and sustainability assessment.",
         links: [
-          // { label: "PDF", href: "/papers/my_paper.pdf", external: false },
-          // { label: "DOI", href: "https://doi.org/...", external: true },
+          {
+            label: "Paper (Publisher)",
+            href: "https://www.emerald.com/insight/content/doi/10.1108/RPJ-06-2025-0244/full/html",
+            external: true,
+          },
+          {
+            label: "DOI",
+            href: "https://doi.org/10.1108/RPJ-06-2025-0244",
+            external: true,
+          },
+          {
+            label: "Google Scholar",
+            href: "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=xC4NHv0AAAAJ&citation_for_view=xC4NHv0AAAAJ%3Au-x6o8ySG0sC&inst=17395704991083290304",
+            external: true,
+          },
+        ],
+      },
+      {
+        title:
+          "Multi-sensor deep learning framework for detection and severity estimation of nozzle clogging in pellet-based 3D printing",
+        venue: "Progress in Additive Manufacturing (Springer Nature)",
+        year: "2025",
+        authors:
+          "Rajdeep Singh Devra, Shail Jadav, Urvish Shah, Harish J. Palanthandalam-Madapusi, Madhu Vadali",
+        notes:
+          "Developed a multi-sensor LSTM-based framework to detect and quantify nozzle clogging severity in pellet-based FDM using time-series signals (e.g., current/vibration/temperature) with strong classification accuracy and generalization.",
+        links: [
+          {
+            label: "Paper (Springer)",
+            href: "https://link.springer.com/article/10.1007/s40964-025-01448-z",
+            external: true,
+          },
+          {
+            label: "DOI",
+            href: "https://doi.org/10.1007/s40964-025-01448-z",
+            external: true,
+          },
+          {
+            label: "Google Scholar",
+            href: "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=xC4NHv0AAAAJ&citation_for_view=xC4NHv0AAAAJ%3Au5HHmVD_uO8C&inst=17395704991083290304",
+            external: true,
+          },
         ],
       },
     ],
     []
   );
+
 
 
 
