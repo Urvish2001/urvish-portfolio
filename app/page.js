@@ -161,6 +161,7 @@ function Navbar() {
     { id: "iitgn", label: "IITGN" },
     { id: "oob", label: "OoB" },
     { id: "robocon", label: "Robocon" },
+    { id: "scarecrow", label: "Scarecrow 2.0" },
     { id: "publications", label: "Publications" },
     { id: "skills", label: "Skills" },
     { id: "contact", label: "Contact" },
@@ -282,6 +283,17 @@ export default function Home() {
       { type: "image", src: "/images/Robocon/Passing_and_catching.jpg", alt: "Passing and catching" },
       { type: "image", src: "/images/Robocon/DAP_photo.JPG", alt: "DAP / pneumatic launching mechanism" },
       { type: "image", src: "/images/Robocon/Awards_photo.jpg", alt: "Award photo" },
+    ],
+    []
+  );
+
+  const mediaScarecrow = useMemo(
+    () => [
+      // Replace with your real assets in /public
+      // { type: "video", src: "/videos/SCARECROW/demo.mp4", alt: "Advanced Scarecrow demo video" },
+      { type: "image", src: "/images/SCARECROW/Scarecrow_animated_photo.png", alt: "Advanced Scarecrow 2.0 prototype" },
+      { type: "image", src: "/images/SCARECROW/Scarecrow_team.png", alt: "Team photo of Scarecrow project" },
+      { type: "image", src: "/images/SCARECROW/Scarecrow_Circuit.png", alt: "Electronics enclosure and wiring" },
     ],
     []
   );
@@ -445,6 +457,10 @@ export default function Home() {
     []
   );
 
+  const scarecrowTags = useMemo(
+    () => ["Arduino", "Embedded Systems", "IoT", "GSM (SIM800L)", "Sensors", "Prototyping"],
+    []
+  );
 
   // ======== Publications (NEW) ========
   const publications = useMemo(
@@ -513,27 +529,79 @@ export default function Home() {
     () => [
       {
         title: "Robotics (ROS)",
-        items: ["ROS 2 Humble", "Gazebo", "TF", "Nav2 basics", "Multi-robot namespaces", "Sensor pipelines"],
-      },
-      {
-        title: "Embedded & Electronics",
-        items: ["Altium Designer", "STM32", "Arduino", "Board bring-up & debug", "Power electronics integration", "UART/I2C/SPI"],
+        items: [
+          "ROS 2 Humble",
+          "Gazebo simulation",
+          "ROS node development (Python, C++)",
+          "Multi-robot bringup & topic isolation",
+          "SLAM basics (Gmapping, Cartographer) ",
+          "Nav2 basics",
+          "Sensor integration pipelines",
+        ],
       },
       {
         title: "Multi-Robot & Autonomy",
-        items: ["Decentralized coordination", "Failure-tolerant behaviors", "Field testing", "Experiment logging & metrics"],
+        items: [
+          "Decentralized coordination (role-based behaviors)",
+          "Failure-tolerant execution & robot drop-out handling",
+          "Stability-focused control (yaw drift / slip awareness)",
+          "Simulation → real-world validation workflow",
+          "Structured metrics & episode/step logging",
+        ],
+      },
+      {
+        title: "Embedded & Electronics",
+        items: [
+          "Altium Designer (multi-layer PCB design)",
+          "Board bring-up, debugging, validation",
+          "STM32, Arduino",
+          "UART / I2C / SPI",
+          "Power electronics integration",
+          "Wireless modules: LoRa (E22), GSM (SIM800L)",
+        ],
       },
       {
         title: "Software",
-        items: ["Python", "C++", "Linux", "Git", "Debugging", "Data logging (CSV/TensorBoard-style)"],
+        items: [
+          "Python",
+          "C++",
+          "Linux",
+          "Git",
+          "Debugging & instrumentation",
+          "OpenCV (calibration, detection, geometry tools)",
+          "Data logging (CSV, TensorBoard-style)",
+        ],
+      },
+      {
+        title: "Learning & Optimization",
+        items: [
+          "Reinforcement learning",
+          "Reward shaping, episode design, evaluation pipelines",
+          "Exploration strategies & stability monitoring",
+        ],
+      },
+      {
+        title: "Sensing & Modeling",
+        items: [
+          "Gaussian Process regression (belief + uncertainty)",
+          "Exploration–exploitation acquisition logic",
+          "RSSI-based sensing (field measurements)",
+          "Sensor fusion mindset (IMU/odometry-style pipelines)",
+        ],
       },
       {
         title: "Mechanical (supporting)",
-        items: ["CAD (SolidWorks)", "Prototyping & assembly", "System integration mindset"],
+        items: [
+          "SolidWorks (CAD fundamentals)",
+          "Prototyping & assembly",
+          "Pneumatics: DCV valves, pressure regulation (Robocon)",
+          "3D printing systems (pellet / recycled plastic workflows)",
+        ],
       },
     ],
     []
   );
+
 
   return (
     <main id="top" className="min-h-screen bg-sky-50 text-gray-900">
@@ -933,6 +1001,51 @@ export default function Home() {
         </Card>
       </Section>
 
+      {/* ======== ADVANCED SCARECROW 2.0 (NEW) ======== */}
+      <Section
+        id="scarecrow"
+        title="Advanced Scarecrow 2.0 — Smart Farming System"
+        subtitle="IoT-based pest deterrence system with sensor-driven triggering, remote alerts, and field-ready packaging."
+      >
+        <Card
+          title="Advanced Scarecrow 2.0"
+          meta="Ideathon (E-Cell × IIT Bombay) • Runner-up"
+          tags={scarecrowTags}
+        >
+          <div className="text-sm text-gray-800 leading-relaxed">
+            Built a smart farming deterrence system to detect intrusions and trigger multi-modal responses.
+            The system combines motion sensing, environmental sensing, and GSM-based messaging to support
+            remote monitoring and reliable operation in outdoor conditions.
+          </div>
+
+          <SubProject
+            title="What I built"
+            bullets={[
+              "Event-driven deterrence logic using PIR motion detection and configurable trigger thresholds.",
+              "GSM alert pipeline via SIM800L for real-time notifications (no Wi-Fi dependency in rural areas).",
+              "Weather-aware sensing inputs (rain + soil moisture) to reduce false triggers and improve reliability.",
+              "Field-ready packaging: wiring management, modular sensor placement, and quick maintenance access.",
+            ]}
+          />
+
+          <SubProject
+            title="Hardware stack"
+            bullets={[
+              "Arduino-based control system with PIR sensor, rain sensor, soil moisture sensor, and SIM800L GSM module.",
+              "Solar panel support for outdoor deployment and improved runtime (power-aware design).",
+              "Actuation output designed for loud audio / flashing light / motion-based deterrence (configurable).",
+            ]}
+          />
+
+          <div className="mt-4 rounded-xl border border-gray-200 bg-gray-50 p-3 text-xs text-gray-700">
+            <span className="font-semibold">Recognition:</span>{" "}
+            Runner-up at an Ideathon organized by E-Cell in collaboration with IIT Bombay.
+          </div>
+
+          <MediaGrid items={mediaScarecrow} />
+        </Card>
+      </Section>
+
       
       {/* ======== PUBLICATIONS SECTION (NEW) ======== */}
       <Section
@@ -955,7 +1068,7 @@ export default function Home() {
         </div>
       </Section>
 
-{/* SKILLS */}
+      {/* SKILLS */}
       <Section id="skills" title="Skills" subtitle="">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {skillGroups.map((g) => (
