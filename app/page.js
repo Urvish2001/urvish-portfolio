@@ -90,7 +90,10 @@ function MediaGrid({ items = [] }) {
             <ImageOrPlaceholder
               src={m.src}
               alt={m.alt || "Media"}
-              className="h-full w-full rounded-lg object-cover"
+              className={cx(
+                "h-full w-full rounded-lg bg-white border border-gray-200",
+                m.fit === "contain" ? "object-contain" : "object-cover"
+              )}
             />
           )}
         </div>
@@ -243,8 +246,8 @@ export default function Home() {
   const mediaSSL = useMemo(
     () => [
       { type: "video", src: "/videos/MRS_SSL/ssl_demo.mp4", poster: "/videos/MRS_SSL/ssl_poster.jpg" },
-      { type: "image", src: "/images/MRS_SSL/ssl_map.png", alt: "Signal map / field estimate" },
       { type: "image", src: "/images/MRS_SSL/ssl_robot_setup.png", alt: "TurtleBot3 Burger + LoRa setup" },
+      { type: "image", src: "/images/MRS_SSL/gp_rssi_belief_map.png", alt: "TB3 robot paths + GP RSSI belief map (mean)" },
     ],
     []
   );
@@ -252,8 +255,8 @@ export default function Home() {
   const mediaTransport = useMemo(
     () => [
       { type: "video", src: "/videos/COLO_TRANS/transport_demo.mp4", poster: "/images/transport_poster.jpg" },
-      { type: "image", src: "/images/transport_gazebo.png", alt: "Gazebo multi-robot transport" },
-      { type: "image", src: "/images/transport_real.png", alt: "Real-world multi-robot transport (TB3 Burger)" },
+      { type: "image", src: "/images/COLO_TRANS/Robots.jpeg", alt: "Robots Used For the Experiments", fit: "contain" },
+      { type: "image", src: "/images/COLO_TRANS/object_trajectory_xy.png", alt: "object trajectory" },
     ],
     []
   );
@@ -262,9 +265,9 @@ export default function Home() {
   const mediaIITGN = useMemo(
     () => [
       // Replace with your real filenames in /public
-      { type: "image", src: "/images/iitgn_lab.png", alt: "IITGN Robotics Lab work" },
-      { type: "image", src: "/images/iitgn_printer.png", alt: "Custom 3D printer using raw plastic as filament" },
-      { type: "image", src: "/images/iitgn_robot.png", alt: "Mini-robot / PCB bring-up work" },
+      { type: "image", src: "/images/IITGN/Custom_3d_printer.png", alt: "Custom 3D printer using raw plastic as filament" },
+      { type: "image", src: "/images/IITGN/3dprint_closeup.jpg", alt: "3D printed Part using Custom 3D printer with raw plastic as filament" },
+      { type: "image", src: "/images/IITGN/mini_robot_swarm.jpg", alt: "Custom designed Mini-robot" },
 
       // Optional videos (uncomment if you have them)
       // { type: "video", src: "/videos/iitgn_printer_demo.mp4", poster: "/images/iitgn_printer_poster.jpg" },
@@ -596,34 +599,84 @@ export default function Home() {
             <div>
               <div className="font-semibold">What I built</div>
               <ul className="list-disc ml-5 space-y-1">
-                <li>End-to-end pipeline: RSSI capture → filtering → field estimate → next waypoint decision (ROS-based).</li>
-                <li>Decentralized execution: each robot runs its own decision loop (no shared controller required).</li>
-                <li>Peer-aware behavior to reduce redundant sampling and improve coverage.</li>
-                <li>Fault-tolerant behavior: if one robot drops out, remaining robots continue the mission without stopping the system.</li>
+                <li>
+                  Designed <span className="font-semibold">Bayes-Swarm</span>, a decentralized algorithm for
+                  locating an unknown signal source using noisy spatial measurements.
+                </li>
+                <li>
+                  Algorithm is modality-agnostic and applicable to RF (RSSI), sound, chemical concentration,
+                  or any scalar spatial field.
+                </li>
+                <li>
+                  Each robot independently samples the field and makes decisions without centralized coordination
+                  or a shared global map.
+                </li>
               </ul>
             </div>
 
             <div>
-              <div className="font-semibold">Engineering details (built for scaling + failures)</div>
+              <div className="font-semibold">Core algorithm loop</div>
               <ul className="list-disc ml-5 space-y-1">
-                <li>Scaling is achieved by adding more TurtleBot3 Burger agents running the same node stack (no hard coupling or global state requirement).</li>
-                <li>Robots are not interdependent for basic operation; the system continues under partial team availability.</li>
-                <li>Waypoint scoring balances “go where signal seems stronger” vs “go where uncertainty is high” under compute limits.</li>
+                <li>
+                  <span className="font-semibold">Measurement:</span> Each robot samples a noisy scalar signal at its current location.
+                </li>
+                <li>
+                  <span className="font-semibold">Belief update:</span> A Gaussian Process (GP) model represents both
+                  the estimated signal field and spatial uncertainty.
+                </li>
+                <li>
+                  <span className="font-semibold">Waypoint selection:</span> Each robot selects its next target
+                  by optimizing an acquisition function that balances exploration and exploitation.
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <div className="font-semibold">Key innovation</div>
+              <ul className="list-disc ml-5 space-y-1">
+                <li>
+                  Introduced a dynamic exploration–exploitation coefficient that adapts based on swarm coverage.
+                </li>
+                <li>
+                  When uncertainty remains high, robots prioritize exploration; as coverage improves,
+                  behavior shifts toward exploitation and convergence.
+                </li>
+                <li>
+                  Prevents premature convergence to local artifacts and improves final localization accuracy.
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <div className="font-semibold">Engineering details (built for real robots)</div>
+              <ul className="list-disc ml-5 space-y-1">
+                <li>
+                  Robots operate asynchronously, tolerating communication delays and dropped updates.
+                </li>
+                <li>
+                  A local active-radius constraint prevents robots from selecting overlapping or conflicting waypoints.
+                </li>
+                <li>
+                  No centralized map, force sensing, or explicit inter-robot coordination is required.
+                </li>
               </ul>
             </div>
 
             <div>
               <div className="font-semibold">Testing & metrics</div>
               <ul className="list-disc ml-5 space-y-1">
-                <li>Validated in Gazebo first (repeatable tests), then tested in real-world runs with 4 TurtleBot3 Burger robots.</li>
-                <li>Measured success rate, time-to-source, and localization error over repeated trials.</li>
-                <li>Compared different decision horizons vs runtime (compute vs performance trade-off).</li>
+                <li>
+                  Evaluated in simulation and real-world indoor experiments using TurtleBot3 Burger robots.
+                </li>
+                <li>
+                  Visualized robot trajectories over GP belief maps to analyze convergence behavior.
+                </li>
+                <li>
+                  Measured time-to-source, localization error, and robustness under RSSI noise and multipath effects.
+                </li>
               </ul>
-              <div className="mt-2 rounded-xl border border-gray-200 bg-gray-50 p-3 text-xs text-gray-700">
-                <span className="font-semibold">Add your real numbers here:</span> success rate (%), mean error (m), median time (s),
-                N trials, arena size, and dropout cases tested.
-              </div>
             </div>
+
 
             <MediaGrid items={mediaSSL} />
           </Card>
@@ -653,36 +706,94 @@ export default function Home() {
             <div>
               <div className="font-semibold">What I built</div>
               <ul className="list-disc ml-5 space-y-1">
-                <li>Decentralized multi-robot coordination to move an object without a single-point controller.</li>
-                <li>Stability-first behaviors to prevent object spin, drift, or runaway on slopes.</li>
-                <li>Structured logging: per-step signals + episode summaries for debugging and performance analysis.</li>
-                <li>Fault-tolerant execution: if any robot fails or drops out, remaining robots continue the mission (capacity permitting).</li>
+                <li>
+                  Designed <span className="font-semibold">R2P2 (Roles with Rules and Proportional-control Primitives)</span>,
+                  a fully decentralized algorithm for non-prehensile collaborative object transport.
+                </li>
+                <li>
+                  Each robot independently selects a role and executes a simple control primitive based solely on
+                  its relative geometry to the object—no centralized controller, force optimization, or joint trajectory planning.
+                </li>
+                <li>
+                  Enabled stable object motion while preventing rotation, drift, and runaway behavior, including on inclined surfaces.
+                </li>
+                <li>
+                  Implemented structured logging (per-step and episode-level) to analyze stability, failure modes,
+                  and convergence behavior.
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <div className="font-semibold">Core idea (why R2P2 works)</div>
+              <ul className="list-disc ml-5 space-y-1">
+                <li>
+                  Robots reason in an <span className="font-semibold">object-fixed (box-aligned) coordinate frame</span>
+                  rather than the global map.
+                </li>
+                <li>
+                  Each robot determines whether it is positioned behind, lateral, or diagonal relative to the desired object motion.
+                </li>
+                <li>
+                  This relative geometry directly determines the robot’s role, which is recomputed continuously as
+                  the object translates or rotates.
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <div className="font-semibold">Roles & control primitives</div>
+              <ul className="list-disc ml-5 space-y-1">
+                <li>
+                  <span className="font-semibold">Push:</span> Robots behind the desired motion direction regulate
+                  translational error using proportional velocity control.
+                </li>
+                <li>
+                  <span className="font-semibold">Prevent:</span> Laterally positioned robots suppress undesired
+                  rotation and drift by correcting orientation error.
+                </li>
+                <li>
+                  <span className="font-semibold">Support:</span> Diagonally offset robots preserve formation symmetry
+                  and assist stability without directly driving motion.
+                </li>
               </ul>
             </div>
 
             <div>
               <div className="font-semibold">Engineering details (built for real constraints)</div>
               <ul className="list-disc ml-5 space-y-1">
-                <li>Robots run independently (decentralized loops), avoiding interdependence that would halt the system on a single failure.</li>
-                <li>Incline/slip detection triggers safer behavior modes (support positioning / reduced aggressive pushing).</li>
-                <li>Prevents/penalizes overtaking and off-axis pushing that causes rotation or loss of contact.</li>
-                <li>Scaling beyond 4 robots is supported by adding additional TurtleBot3 Burger agents with the same behavior stack.</li>
+                <li>
+                  Robots run independent control loops, avoiding interdependence that would halt the system if a robot fails.
+                </li>
+                <li>
+                  Incline and slip detection trigger safer behavior modes such as reduced pushing aggression
+                  and support positioning.
+                </li>
+                <li>
+                  Penalizes overtaking and off-axis pushing that causes loss of contact or object rotation.
+                </li>
+                <li>
+                  Scaling beyond 4 robots is supported by adding additional TurtleBot3 Burger agents
+                  with the same behavior stack.
+                </li>
               </ul>
             </div>
 
             <div>
               <div className="font-semibold">Testing & metrics</div>
               <ul className="list-disc ml-5 space-y-1">
-                <li>Validated in Gazebo first (repeatable tests), then tested with 4 TurtleBot3 Burger robots in real-world scenarios.</li>
-                <li>Measured success rate and time-to-goal under terrain and disturbance conditions.</li>
-                <li>Tracked object stability (yaw error / slip events / oscillations) to identify failure modes.</li>
+                <li>
+                  Validated extensively in Gazebo for repeatability, then tested with
+                  <span className="font-semibold">4 TurtleBot3 Burger robots</span> in real-world experiments.
+                </li>
+                <li>
+                  Measured success rate, time-to-goal, and robustness under terrain variation and disturbances.
+                </li>
+                <li>
+                  Tracked object yaw error, slip events, and oscillations to identify and mitigate failure modes.
+                </li>
               </ul>
-              <div className="mt-2 rounded-xl border border-gray-200 bg-gray-50 p-3 text-xs text-gray-700">
-                <span className="font-semibold">Add your real numbers here:</span> success rate (%), avg time (s), slip events/run,
-                yaw error (deg), N runs/episodes, slope range, and dropout cases tested.
-              </div>
             </div>
-
             <MediaGrid items={mediaTransport} />
           </Card>
         </div>
