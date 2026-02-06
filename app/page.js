@@ -1,211 +1,809 @@
-// npm run dev
+"use client";
 
-'use client';
-import React from "react";
+import React, { useMemo, useState } from "react";
+
+function cx(...c) {
+  return c.filter(Boolean).join(" ");
+}
+
+function Pill({ children }) {
+  return (
+    <span className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs text-gray-700">
+      {children}
+    </span>
+  );
+}
+
+function ImageOrPlaceholder({ src, alt, className }) {
+  const [bad, setBad] = useState(false);
+  if (!src || bad) {
+    return (
+      <div
+        className={cx(
+          "flex h-full w-full items-center justify-center rounded-lg border border-gray-200 bg-gradient-to-br from-gray-50 to-gray-100 text-xs text-gray-500",
+          className
+        )}
+        aria-label={alt || "Image placeholder"}
+      >
+        Add image in /public
+      </div>
+    );
+  }
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={className}
+      loading="lazy"
+      onError={() => setBad(true)}
+    />
+  );
+}
+
+function VideoOrPlaceholder({ src, poster, className }) {
+  const [bad, setBad] = useState(false);
+  if (!src || bad) {
+    return (
+      <div
+        className={cx(
+          "flex h-full w-full items-center justify-center rounded-lg border border-gray-200 bg-gradient-to-br from-gray-50 to-gray-100 text-xs text-gray-500",
+          className
+        )}
+        aria-label="Video placeholder"
+      >
+        Add video in /public
+      </div>
+    );
+  }
+  return (
+    <video
+      className={className}
+      controls
+      playsInline
+      preload="metadata"
+      poster={poster}
+      onError={() => setBad(true)}
+    >
+      <source src={src} />
+      Your browser does not support the video tag.
+    </video>
+  );
+}
+
+function MediaGrid({ items = [] }) {
+  if (!items.length) return null;
+  return (
+    <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+      {items.map((m) => (
+        <div key={m.src} className="h-44 md:h-48">
+          {m.type === "video" ? (
+            <VideoOrPlaceholder
+              src={m.src}
+              poster={m.poster}
+              className="h-full w-full rounded-lg object-cover bg-black border border-gray-200"
+            />
+          ) : (
+            <ImageOrPlaceholder
+              src={m.src}
+              alt={m.alt || "Media"}
+              className="h-full w-full rounded-lg object-cover"
+            />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Section({ id, title, subtitle, children }) {
+  return (
+    <section id={id} className="max-w-5xl mx-auto px-4 py-10">
+      <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>
+      {subtitle ? (
+        <p className="mt-1 text-sm text-gray-600 leading-relaxed">{subtitle}</p>
+      ) : null}
+      <div className="mt-5">{children}</div>
+    </section>
+  );
+}
+
+function Card({ title, meta, tags = [], links = [], children }) {
+  return (
+    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h3 className="text-lg font-semibold leading-snug">{title}</h3>
+          {meta ? <p className="mt-1 text-sm text-gray-600">{meta}</p> : null}
+        </div>
+        {links.length ? (
+          <div className="flex flex-wrap gap-2">
+            {links.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                className="text-sm text-blue-600 underline underline-offset-4"
+                target={l.external ? "_blank" : undefined}
+                rel={l.external ? "noreferrer" : undefined}
+              >
+                {l.label}
+              </a>
+            ))}
+          </div>
+        ) : null}
+      </div>
+
+      <div className="mt-4 space-y-4 text-sm leading-relaxed text-gray-800">
+        {children}
+      </div>
+
+      {tags.length ? (
+        <div className="mt-4 flex flex-wrap gap-2">
+          {tags.map((t) => (
+            <Pill key={t}>{t}</Pill>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function Navbar() {
+  const items = [
+    { id: "top", label: "Home" },
+    { id: "projects", label: "Projects" },
+    { id: "iitgn", label: "IITGN" },
+    { id: "oob", label: "OoB" },
+    { id: "robocon", label: "Robocon" },
+    { id: "publications", label: "Publications" },
+    { id: "skills", label: "Skills" },
+    { id: "contact", label: "Contact" },
+  ];
+
+  return (
+    <div className="sticky top-0 z-30 border-b border-gray-200 bg-white/90 backdrop-blur">
+      <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+        <a href="#top" className="font-semibold tracking-tight">
+          Urvish Shah
+        </a>
+
+        <div className="hidden md:flex items-center gap-4 text-sm">
+          {items.map((s) => (
+            <a
+              key={s.id}
+              href={`#${s.id}`}
+              className="text-gray-700 hover:text-black"
+            >
+              {s.label}
+            </a>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-2 text-sm">
+          <a
+            href="/Urvish_cv.pdf"
+            className="rounded-full border border-gray-200 px-3 py-1 hover:bg-gray-50"
+            target="_blank"
+            rel="noreferrer"
+            title="Put your PDF at public/Urvish_cv.pdf"
+          >
+            Resume
+          </a>
+          <a
+            href="#contact"
+            className="rounded-full bg-black text-white px-3 py-1 hover:bg-black/90"
+          >
+            Contact
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StatBox({ items }) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+      {items.map((s) => (
+        <div
+          key={s.label}
+          className="rounded-xl border border-gray-200 bg-gray-50 p-3"
+        >
+          <div className="text-xs text-gray-500">{s.label}</div>
+          <div className="mt-1 text-sm font-semibold text-gray-900">
+            {s.value}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ======== IITGN add-on helper (NEW) ======== */
+function SubProject({ title, bullets = [] }) {
+  return (
+    <div className="mt-4">
+      <div className="font-semibold text-sm">{title}</div>
+      <ul className="mt-2 list-disc ml-5 space-y-1 text-sm text-gray-800 leading-relaxed">
+        {bullets.map((b, i) => (
+          <li key={i}>{b}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 export default function Home() {
+  // =========================
+  // Put YOUR media in /public
+  // =========================
+  const mediaSSL = useMemo(
+    () => [
+      { type: "video", src: "/videos/ssl_demo.mp4", poster: "/images/ssl_poster.jpg" },
+      { type: "image", src: "/images/ssl_map.png", alt: "Signal map / field estimate" },
+      { type: "image", src: "/images/ssl_robot_setup.png", alt: "TurtleBot3 Burger + LoRa setup" },
+    ],
+    []
+  );
+
+  const mediaTransport = useMemo(
+    () => [
+      { type: "video", src: "/videos/transport_demo.mp4", poster: "/images/transport_poster.jpg" },
+      { type: "image", src: "/images/transport_gazebo.png", alt: "Gazebo multi-robot transport" },
+      { type: "image", src: "/images/transport_real.png", alt: "Real-world multi-robot transport (TB3 Burger)" },
+    ],
+    []
+  );
+
+  // ======== IITGN media (NEW) ========
+  const mediaIITGN = useMemo(
+    () => [
+      // Replace with your real filenames in /public
+      { type: "image", src: "/images/iitgn_lab.png", alt: "IITGN Robotics Lab work" },
+      { type: "image", src: "/images/iitgn_printer.png", alt: "Custom 3D printer using raw plastic as filament" },
+      { type: "image", src: "/images/iitgn_robot.png", alt: "Mini-robot / PCB bring-up work" },
+
+      // Optional videos (uncomment if you have them)
+      // { type: "video", src: "/videos/iitgn_printer_demo.mp4", poster: "/images/iitgn_printer_poster.jpg" },
+      // { type: "video", src: "/videos/iitgn_manipulator_demo.mp4", poster: "/images/iitgn_manipulator_poster.jpg" },
+    ],
+    []
+  );
+
+  // ======== Robocon media (NEW) ========
+  const mediaRobocon = useMemo(
+    () => [
+      // Replace with your real filenames in /public
+      { type: "video", src: "/videos/robocon_demo.mp4", poster: "/images/robocon_poster.jpg" },
+      { type: "image", src: "/images/robocon_robot.png", alt: "Robocon robot (Target/Defensive system)" },
+      { type: "image", src: "/images/robocon_launcher.png", alt: "DAP / pneumatic launching mechanism" },
+
+      // Optional: certificate/award (crop to text, avoid selfie)
+      // { type: "image", src: "/images/robocon_award.png", alt: "Robocon award / ranking proof" },
+    ],
+    []
+  );
+
+
+  /* ======== IITGN data (NEW) ======== */
+  const iitgnSubProjects = useMemo(
+    () => [
+      {
+        title: "Tendon-Driven Flexible Manipulator Prototyping",
+        bullets: [
+          "Built and iterated tendon-driven flexible manipulator prototypes focusing on repeatability, routing, and tension stability.",
+          "Worked on mechanical assembly, tendon routing strategies, and anchor-point refinement to reduce backlash and hysteresis.",
+          "Assisted with actuator integration and basic control testing to validate achievable curvature and motion repeatability.",
+          "Performed bench-level testing to identify failure modes such as tendon slack, uneven loading, and joint fatigue.",
+        ],
+      },
+      {
+        title: "Swarm-Compatible Mini-Robot & Custom PCB Bring-Up",
+        bullets: [
+          "Contributed to swarm-compatible mini-robot platforms for multi-robot experiments.",
+          "Assisted with custom PCB bring-up including power checks, flashing firmware, and validating communication interfaces.",
+          "Debugged hardware–software integration issues (boot failures, communication drops, sensor initialization).",
+          "Supported modular design decisions to enable scalability and repeatable deployment across multiple robots.",
+        ],
+      },
+      {
+        title: "Custom 3D Printer Using Raw Plastic as Filament",
+        bullets: [
+          "Worked on a custom 3D printer designed to directly use raw plastic instead of conventional filament.",
+          "Modified and tuned Marlin firmware parameters to support non-standard extrusion behavior and thermal profiles.",
+          "Assisted with power electronics integration, including heater control and safe power delivery to actuators.",
+          "Supported mechanical calibration and extrusion testing to improve print consistency and reliability.",
+          "Project won Best Design Award — Vishwakarma Awards (IIT Delhi) for a sustainable 3D printing system (raw plastic feedstock).",
+        ],
+      },
+      {
+        title: "Sensor-Based Material Classification Pipeline",
+        bullets: [
+          "Developed a sensor-based pipeline to classify raw plastic feedstock characteristics during printing.",
+          "Integrated sensors with the printer control stack to enable real-time material detection.",
+          "Used sensor feedback to assist in tuning extrusion parameters and identifying inconsistent feedstock.",
+          "Validated the pipeline through controlled test runs and comparison against expected material behavior.",
+        ],
+      },
+    ],
+    []
+  );
+
+  const iitgnTags = useMemo(
+    () => [
+      "IIT Gandhinagar",
+      "Robotics Lab",
+      "Hardware prototyping",
+      "Custom PCB bring-up",
+      "Firmware (Marlin)",
+      "Power electronics",
+      "Sensor integration",
+      "Mechanical iteration",
+      "Best Design Award (IIT Delhi)", // <- add this
+    ],
+    []
+  );
+
+  // ======== OoB Services data (NEW) ========
+  const oobSubProjects = useMemo(
+    () => [
+      {
+        title: "Multi-layer PCB Design & Validation",
+        bullets: [
+          "Designed and validated multi-layer PCBs using Altium Designer for embedded hardware applications.",
+          "Handled schematic capture, component selection, and PCB layout with attention to signal integrity and power routing.",
+          "Reviewed designs against manufacturability and assembly constraints before fabrication.",
+        ],
+      },
+      {
+        title: "Embedded Hardware Integration",
+        bullets: [
+          "Integrated microcontrollers, sensors, wireless modules, and power electronics on custom PCB assemblies.",
+          "Supported interface bring-up for communication buses and peripheral connections during early prototypes.",
+          "Worked closely with firmware and test workflows to ensure hardware–software compatibility.",
+        ],
+      },
+      {
+        title: "Board Bring-Up, Debugging & System Validation",
+        bullets: [
+          "Performed board bring-up including power checks, clock verification, and initial firmware flashing.",
+          "Debugged hardware issues such as power instability, incorrect pin mapping, and peripheral initialization failures.",
+          "Conducted system-level validation to verify functionality under expected operating conditions.",
+        ],
+      },
+    ],
+    []
+  );
+
+  const oobTags = useMemo(
+    () => [
+      "OoB Services",
+      "Altium Designer",
+      "Multi-layer PCB design",
+      "Board bring-up",
+      "Embedded systems",
+      "Hardware debugging",
+      "Power electronics",
+    ],
+    []
+  );
+
+  // ======== ABU Robocon data (NEW) ========
+  const roboconSubProjects = useMemo(
+    () => [
+      {
+        title: "Embedded Control Systems for Competition Robots",
+        bullets: [
+          "Developed embedded control systems for competition robots using Arduino and STM32 microcontrollers.",
+          "Implemented closed-loop motor control using encoder feedback for precise and repeatable actuation.",
+          "Integrated IMUs, encoders, motors, distance sensors, and pneumatic mechanisms into a unified control stack.",
+        ],
+      },
+      {
+        title: "Motor Driver & Actuator Control PCB Design",
+        bullets: [
+          "Designed and tested custom PCBs for motor drivers and actuator control tailored for competition constraints.",
+          "Validated power distribution, signal routing, and reliability under high-load and transient conditions.",
+          "Performed board-level debugging and rapid fixes during testing and competition preparation phases.",
+        ],
+      },
+      {
+        title: "System Integration, Testing & Competition Deployment",
+        bullets: [
+          "Assisted with full-system integration across mechanical, electrical, and control subsystems.",
+          "Performed iterative testing, debugging, and tuning under tight timelines leading up to competition.",
+          "Supported on-field deployment, failure diagnosis, and rapid recovery during live competition runs.",
+        ],
+      },
+      {
+        title: "Team Leadership, Mentorship & IP Contribution",
+        bullets: [
+          "Mentored junior team members on embedded systems, wiring practices, and debugging methodologies.",
+          "Contributed to system architecture discussions for competition strategy and robot design trade-offs.",
+          "Co-inventor on Indian patent IN202321008858 related to robotic system design.",
+        ],
+      },
+    ],
+    []
+  );
+
+  const roboconTags = useMemo(
+    () => [
+      "ABU Robocon",
+      "PCB Design",
+      "STM32",
+      "Arduino",
+      "Pneumatics",
+      "Direct Air Pressure (DAP)",
+      "DCV Valves",
+      "Pressure regulation",
+      "Embedded control",
+      "Competition robotics",
+    ],
+    []
+  );
+
+
+  // ======== Publications (NEW) ========
+  const publications = useMemo(
+    () => [
+      {
+        title: "Add your publication title here",
+        venue: "Conference / Journal / Workshop",
+        year: "YYYY",
+        authors: "Urvish Shah, ...",
+        notes: "1–2 lines in plain engineering language: what the work contributes and what you built/validated.",
+        links: [
+          // { label: "PDF", href: "/papers/my_paper.pdf", external: false },
+          // { label: "DOI", href: "https://doi.org/...", external: true },
+        ],
+      },
+    ],
+    []
+  );
+
+
+
+  const skillGroups = useMemo(
+    () => [
+      {
+        title: "Robotics (ROS)",
+        items: ["ROS 2 Humble", "Gazebo", "TF", "Nav2 basics", "Multi-robot namespaces", "Sensor pipelines"],
+      },
+      {
+        title: "Embedded & Electronics",
+        items: ["Altium Designer", "STM32", "Arduino", "Board bring-up & debug", "Power electronics integration", "UART/I2C/SPI"],
+      },
+      {
+        title: "Multi-Robot & Autonomy",
+        items: ["Decentralized coordination", "Failure-tolerant behaviors", "Field testing", "Experiment logging & metrics"],
+      },
+      {
+        title: "Software",
+        items: ["Python", "C++", "Linux", "Git", "Debugging", "Data logging (CSV/TensorBoard-style)"],
+      },
+      {
+        title: "Mechanical (supporting)",
+        items: ["CAD (CATIA/NX/SolidWorks)", "Prototyping & assembly", "System integration mindset"],
+      },
+    ],
+    []
+  );
+
   return (
-    <main className="min-h-screen bg-white text-gray-900 p-6">
-      <section className="max-w-4xl mx-auto py-12">
-        <h1 className="text-4xl font-bold mb-4">Urvish Shah</h1>
-        <p className="text-lg mb-6">Robotics Engineer | Embedded Systems | Multi-Agent Control</p>
-        <a href="mailto:shahurvish2001@gmail.com" className="text-blue-600 underline">
-          Contact Me
-        </a>
-        <a href="/Urvish_cv.pdf" download className="text-sm text-blue-600 underline mt-2 block">
-          📄 Download Resume
-        </a>
-      </section>
+    <main id="top" className="min-h-screen bg-sky-50 text-gray-900">
+      <Navbar />
 
-      {/* Rotating Highlights Carousel */}
-      <section className="max-w-4xl mx-auto py-6">
-        <h2 className="text-xl font-semibold mb-4">🚀 Highlighted Projects</h2>
-        <div className="relative w-200 h-140 overflow-hidden rounded-xl shadow-lg">
-          <div className="animate-slide flex w-[100%] h-[100%]">
-            <a href="#robocon" className="relative w-full flex-shrink-0">
-              <img src="/images/team_photo_with_robot.JPG" alt="Robocon" className="rounded object-cover w-full h-full scale-90 transform origin-center " />
-              <div className="absolute bottom-0 bg-black bg-opacity-60 text-white w-full text-center text-sm p-1">Robocon Journey</div>
-            </a>
-
-            <a href="#robocon" className="relative w-full flex-shrink-0">
-              <img src="/images/DAP_photo.JPG" alt="Arrow Launchers Robots" className="rounded object-cover h-full w-full scale-90 transform origin-center" />
-              <div className="absolute bottom-0 bg-black bg-opacity-60 text-white w-full text-center text-sm p-1">Robot Photos</div>
-            </a>
-            
-            <a href="#scarecrow" className="relative w-full flex-shrink-0">
-              <img src="/images/Scarecrow_team.png" alt="Scarecrow" className="rounded object-cover w-full h-full scale-90 transform origin-center" />
-              <div className="absolute bottom-0 bg-black bg-opacity-60 text-white w-full text-center text-sm p-1">Scarecrow 2.0</div>
-            </a>
-            <a href="#iitgn" className="relative w-full flex-shrink-0">
-              <img src="/images/3dprinter_award.png" alt="IITGN Lab" className="object-cover w-full h-120 scale-95 transform origin-center" />
-              <div className="absolute bottom-0 bg-black bg-opacity-60 text-white w-full text-center text-sm p-1">IITGN Robotics Lab</div>
-            </a>
-            <a href="#resume" className="relative w-full flex-shrink-0">
-              <img src="/images/International_certificate.jpg" alt="Resume Highlight" className="object-contain w-full h-full scale-85 transform origin-center" />
-              <div className="absolute bottom-0 bg-black bg-opacity-60 text-white w-full text-center text-sm p-1">Robocon International Certificate</div>
-            </a>
+      {/* HERO */}
+      <section className="max-w-5xl mx-auto px-4 py-10">
+        <div className="rounded-2xl border border-gray-200 bg-white p-7 shadow-sm">
+          <h1 className="text-3xl font-semibold tracking-tight">
+            Robotics / Mechatronics / Embedded Engineer
+          </h1>
+          <p className="mt-3 text-sm text-gray-700 leading-relaxed max-w-3xl">
+            Robotics / mechatronics engineer with hands-on experience across embedded hardware, multi-robot autonomy,
+            and real-world testing. I build systems end-to-end: electronics + sensors → ROS integration → behaviors →
+            validation in Gazebo and on hardware. Flagship work includes decentralized multi-robot coordination on
+            TurtleBot3 Burger platforms (tested with 4 robots, scalable and fault-tolerant by design).
+          </p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            <Pill>TurtleBot3 Burger</Pill>
+            <Pill>Embedded HW + ROS</Pill>
+            <Pill>ROS 2 Humble</Pill>
+            <Pill>Gazebo simulation</Pill>
+            <Pill>Real-world tested (4 robots)</Pill>
+            <Pill>Decentralized execution</Pill>
+            <Pill>Fault-tolerant behavior</Pill>
           </div>
         </div>
-        <style jsx>{`
-          @keyframes slide {
-            0% { transform: translateX(0%); }
-            20% { transform: translateX(0%); }
-            25% { transform: translateX(-100%); }
-            45% { transform: translateX(-100%); }
-            50% { transform: translateX(-200%); }
-            70% { transform: translateX(-200%); }
-            75% { transform: translateX(-300%); }
-            95% { transform: translateX(-300%); }
-            100% { transform: translateX(0%); }
-          }
-          .animate-slide {
-            animation: slide 30s infinite linear;
-          }
-        `}</style>
       </section>
 
+      {/* PROJECTS */}
+      <Section
+        id="projects"
+        title="Flagship projects"
+        subtitle="What recruiters care about: what you built, how it works, what you owned, and how you tested it."
+      >
+        <div className="grid grid-cols-1 gap-6">
+          {/* SSL */}
+          <Card
+            title="Multi-Robot Signal Source Localization"
+            meta="Validated in Gazebo + real-world (4 TurtleBot3 Burger robots): LoRa RSSI sensing → decentralized planning → performance evaluation"
+            tags={[
+              "TurtleBot3 Burger",
+              "LoRa E22 RSSI",
+              "Gazebo",
+              "Decentralized planning",
+              "Optimization loop",
+              "Logging & metrics",
+            ]}
+          >
+            <StatBox
+              items={[
+                { label: "Robots", value: "4 TurtleBot3 Burger (real-world tested)" },
+                { label: "Validation", value: "Gazebo + real-world" },
+                { label: "Scalability", value: "Not limited to 4 (architecture supports scaling)" },
+                { label: "Fault handling", value: "Continues on robot dropout" },
+              ]}
+            />
 
+            <div>
+              <div className="font-semibold">What I built</div>
+              <ul className="list-disc ml-5 space-y-1">
+                <li>End-to-end pipeline: RSSI capture → filtering → field estimate → next waypoint decision (ROS-based).</li>
+                <li>Decentralized execution: each robot runs its own decision loop (no shared controller required).</li>
+                <li>Peer-aware behavior to reduce redundant sampling and improve coverage.</li>
+                <li>Fault-tolerant behavior: if one robot drops out, remaining robots continue the mission without stopping the system.</li>
+              </ul>
+            </div>
+
+            <div>
+              <div className="font-semibold">Engineering details (built for scaling + failures)</div>
+              <ul className="list-disc ml-5 space-y-1">
+                <li>Scaling is achieved by adding more TurtleBot3 Burger agents running the same node stack (no hard coupling or global state requirement).</li>
+                <li>Robots are not interdependent for basic operation; the system continues under partial team availability.</li>
+                <li>Waypoint scoring balances “go where signal seems stronger” vs “go where uncertainty is high” under compute limits.</li>
+              </ul>
+            </div>
+
+            <div>
+              <div className="font-semibold">Testing & metrics</div>
+              <ul className="list-disc ml-5 space-y-1">
+                <li>Validated in Gazebo first (repeatable tests), then tested in real-world runs with 4 TurtleBot3 Burger robots.</li>
+                <li>Measured success rate, time-to-source, and localization error over repeated trials.</li>
+                <li>Compared different decision horizons vs runtime (compute vs performance trade-off).</li>
+              </ul>
+              <div className="mt-2 rounded-xl border border-gray-200 bg-gray-50 p-3 text-xs text-gray-700">
+                <span className="font-semibold">Add your real numbers here:</span> success rate (%), mean error (m), median time (s),
+                N trials, arena size, and dropout cases tested.
+              </div>
+            </div>
+
+            <MediaGrid items={mediaSSL} />
+          </Card>
+
+          {/* Transport */}
+          <Card
+            title="Decentralized Collaborative Object Transportation"
+            meta="Validated in Gazebo + real-world (4 TurtleBot3 Burger robots): decentralized coordination with stability constraints (incline/slip)"
+            tags={[
+              "TurtleBot3 Burger",
+              "ROS 2",
+              "Gazebo",
+              "Multi-robot coordination",
+              "Terrain/slip handling",
+              "Telemetry & logging",
+            ]}
+          >
+            <StatBox
+              items={[
+                { label: "Robots", value: "4 TurtleBot3 Burger (real-world tested)" },
+                { label: "Validation", value: "Gazebo + real-world" },
+                { label: "Scalability", value: "Not limited to 4 (architecture supports scaling)" },
+                { label: "Fault handling", value: "Continues on robot dropout" },
+              ]}
+            />
+
+            <div>
+              <div className="font-semibold">What I built</div>
+              <ul className="list-disc ml-5 space-y-1">
+                <li>Decentralized multi-robot coordination to move an object without a single-point controller.</li>
+                <li>Stability-first behaviors to prevent object spin, drift, or runaway on slopes.</li>
+                <li>Structured logging: per-step signals + episode summaries for debugging and performance analysis.</li>
+                <li>Fault-tolerant execution: if any robot fails or drops out, remaining robots continue the mission (capacity permitting).</li>
+              </ul>
+            </div>
+
+            <div>
+              <div className="font-semibold">Engineering details (built for real constraints)</div>
+              <ul className="list-disc ml-5 space-y-1">
+                <li>Robots run independently (decentralized loops), avoiding interdependence that would halt the system on a single failure.</li>
+                <li>Incline/slip detection triggers safer behavior modes (support positioning / reduced aggressive pushing).</li>
+                <li>Prevents/penalizes overtaking and off-axis pushing that causes rotation or loss of contact.</li>
+                <li>Scaling beyond 4 robots is supported by adding additional TurtleBot3 Burger agents with the same behavior stack.</li>
+              </ul>
+            </div>
+
+            <div>
+              <div className="font-semibold">Testing & metrics</div>
+              <ul className="list-disc ml-5 space-y-1">
+                <li>Validated in Gazebo first (repeatable tests), then tested with 4 TurtleBot3 Burger robots in real-world scenarios.</li>
+                <li>Measured success rate and time-to-goal under terrain and disturbance conditions.</li>
+                <li>Tracked object stability (yaw error / slip events / oscillations) to identify failure modes.</li>
+              </ul>
+              <div className="mt-2 rounded-xl border border-gray-200 bg-gray-50 p-3 text-xs text-gray-700">
+                <span className="font-semibold">Add your real numbers here:</span> success rate (%), avg time (s), slip events/run,
+                yaw error (deg), N runs/episodes, slope range, and dropout cases tested.
+              </div>
+            </div>
+
+            <MediaGrid items={mediaTransport} />
+          </Card>
+        </div>
+      </Section>
+
+      {/* ======== IITGN SECTION (NEW) ======== */}
+      <Section
+        id="iitgn"
+        title="IIT Gandhinagar Robotics Lab Experience"
+        subtitle="Hands-on prototyping and system integration work across robotics hardware, firmware, and testing."
+      >
+        <Card
+          title="IIT Gandhinagar Robotics Lab — Research Intern → Project Assistant"
+          meta="Robotics hardware prototyping • mini-robot platforms • custom PCB bring-up • Marlin firmware • power electronics • sensor integration"
+          tags={iitgnTags}
+        >
+          <div className="text-sm text-gray-800 leading-relaxed">
+            This work focused on building and validating real robotic hardware systems, emphasizing
+            repeatable prototyping, hardware–software integration, and failure-driven iteration.
+          </div>
+
+          <div className="mt-2 text-sm text-gray-800">
+            <span className="font-semibold">Recognition:</span>{" "}
+            Best Design Award — Vishwakarma Awards (IIT Delhi) for a sustainable 3D printing system.
+          </div>
+
+
+          {iitgnSubProjects.map((sp) => (
+            <SubProject key={sp.title} title={sp.title} bullets={sp.bullets} />
+          ))}
+
+          <div className="mt-4 rounded-xl border border-gray-200 bg-gray-50 p-3 text-xs text-gray-700">
+            <span className="font-semibold">Engineering focus:</span> rapid prototyping, hardware debugging,
+            firmware modification, system bring-up, and test-driven iteration in a lab environment.
+          </div>
+          <MediaGrid items={mediaIITGN} />
+        </Card>
+      </Section>
+
+      {/* ======== OoB SERVICES SECTION (NEW) ======== */}
+      <Section
+        id="oob"
+        title="Industry Experience — OoB Services"
+        subtitle="Embedded hardware design, board bring-up, and system-level validation in an industry setting."
+      >
+        <Card
+          title="Hardware Design Engineer (Intern)"
+          meta="OoB Services, Ahmedabad • Jun 2022 – Aug 2022"
+          tags={oobTags}
+        >
+          <div className="text-sm text-gray-800 leading-relaxed">
+            Worked on embedded hardware design and validation tasks with a focus on practical
+            system bring-up, debugging, and integration of real-world electronic components.
+          </div>
+
+          {oobSubProjects.map((sp) => (
+            <SubProject key={sp.title} title={sp.title} bullets={sp.bullets} />
+          ))}
+
+          <div className="mt-4 rounded-xl border border-gray-200 bg-gray-50 p-3 text-xs text-gray-700">
+            <span className="font-semibold">Engineering focus:</span> schematic design, PCB layout,
+            hardware bring-up, embedded integration, and validation-driven debugging.
+          </div>
+        </Card>
+      </Section>
+
+      {/* ======== ABU ROBOTCON SECTION (NEW) ======== */}
+      <Section
+        id="robocon"
+        title="ABU Robocon — Competition Robotics Experience"
+        subtitle="Multi-year experience building, integrating, and deploying competition robots under real-world constraints."
+      >
+        <Card
+          title="Robotics Hardware Engineer — GTU ABU Robocon Team"
+          meta="Ahmedabad, India • Aug 2020 – May 2023"
+          tags={roboconTags}
+        >
+          <div className="text-sm text-gray-800 leading-relaxed">
+            Worked on end-to-end development of competition robots, focusing on embedded control,
+            hardware integration, and rapid debugging under time-critical and failure-prone conditions.
+          </div>
+
+          {roboconSubProjects.map((sp) => (
+            <SubProject key={sp.title} title={sp.title} bullets={sp.bullets} />
+          ))}
+
+            <div className="mt-4 rounded-xl border border-gray-200 bg-gray-50 p-3 text-xs text-gray-700">
+              <span className="font-semibold">Competition highlights:</span>{" "}
+              Achieved 1st and 2nd runner-up positions at DD Robocon (IIT Delhi) using two independent robot systems
+              (Target Robot + Defensive Robot). Represented India at ABU Robocon 2021 in Jimo, China,
+              securing 9th rank among international teams.
+            {/* </div> */}
+            {/* <span className="font-semibold">Competition highlights:</span> Represented India at ABU Robocon 2021
+            (Jimo, China), placing 9th out of 21 teams from 8 countries; contributed to a system awarded */}
+            Best Design for robot mechanical and system design.
+          </div>
+          <MediaGrid items={mediaRobocon} />
+        </Card>
+      </Section>
 
       
+      {/* ======== PUBLICATIONS SECTION (NEW) ======== */}
+      <Section
+        id="publications"
+        title="Publications"
+        subtitle="Technical writing and documented contributions (add PDF/DOI links when available)."
+      >
+        <div className="grid grid-cols-1 gap-4">
+          {publications.map((p) => (
+            <Card
+              key={`${p.title}-${p.year}`}
+              title={p.title}
+              meta={`${p.venue} • ${p.year} • ${p.authors}`}
+              links={p.links || []}
+              tags={["Publication"]}
+            >
+              <div className="text-sm text-gray-800 leading-relaxed">{p.notes}</div>
+            </Card>
+          ))}
+        </div>
+      </Section>
 
-      <section id="about" className="max-w-4xl mx-auto py-8">
-        <h2 className="text-2xl font-semibold mb-4">About Me</h2>
-        <p>
-          I’m a Robotics graduate student at University at Buffalo, focused on multi-robot systems, RL, and embedded control.
-          I build adaptive, collaborative robot behaviors using RL (MADDPG) in ROS/Gazebo, integrating sensors like IMUs and force sensors.
-        </p>
-      </section>
-
-      <section id = "robocon" className="max-w-4xl mx-auto pt-8 pb-0">
-        <h2 className="text-2xl font-semibold mb-4">Robocon Journey</h2>
-        <div className="border p-4 rounded-xl shadow-sm space-y-4">
-          <h3 className="font-bold text-xl">Robocon India & ABU Robocon – Journey from Trainee to International Finalist</h3>
-          <p className="text-sm text-gray-600">
-            <strong>Technologies:</strong> PCB Design, Pneumatics, Direct Air Pressure Launching, Mechanical CAD, DCV Valves, Pressure Regulation
-          </p>
-          <p>
-            I began my Robocon journey in my second semester (2020) with hands-on training in electronics and mechanical fabrication. We participated in DD Robocon organized by IIT Delhi, where we built two robots — a Target Robot and a Defensive Robot — to throw arrows into dynamic and static pots placed at varying heights.
-          </p>
-          <p>
-            We developed two launching mechanisms:
-            <ul className="list-disc ml-6 mt-1">
-              <li><strong>Direct Air Pressure (DAP):</strong> Used controlled air pressure and rotation from 30° to 150° to shoot arrows at precise distances.</li>
-              <li><strong>Pneumatic Jerk Mechanism:</strong> Used gripper release with DCV valve-regulated pressure for precise jerks.</li>
-            </ul>
-          </p>
-          <p>
-            Our team achieved 1st and 2nd runner-up positions nationally — the first team in 19 years to do so with two separate robot systems. We represented India in ABU Robocon 2021 in Jimo, China and secured 9th rank among global teams.
-          </p>
-          <p>
-            Post-competition, we trained over 200 students, mentoring the next Robocon generation.
-          </p>
-
-          <div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              <img src="/images/International_certificate.jpg" alt="International Certificate" className="rounded object-contain h-64 w-full bg-white" />
-              <img src="/images/Sankul_day_certificate.jpg" alt="University Certificate" className="rounded object-cover h-64 w-full" />
-              <img src="/images/Awards_photo.jpg" alt="Field Demo" className="rounded object-cover h-64 w-full" />
-              <img src="/images/DAP_photo.JPG" alt="Arrow Launchers Robots" className="rounded object-cover h-64 w-full" />
-              <img src="/images/Passing_and_catching.jpg" alt="Robo Rugby Robots" className="rounded object-cover h-64 w-full" />
-              <img src="/images/team_photo_with_robot.JPG" alt="Indoor Robocon team" className="rounded object-cover h-64 w-full" />
-            </div>
-
-            <div className="grid grid-cols-3 gap-4 items-start mt-2">
-              <div className="col-span-2 h-[450px] bg-white p-2 rounded flex justify-center items-center">
-                <img
-                  src="/images/Cad_photo.png"
-                  alt="Updated CAD Design"
-                  className="h-full object-contain rotate-270"
-                />
-              </div>
-              <div className="h-[450px] bg-white p-2 rounded flex justify-center items-center">
-                <img
-                  src="/images/PCB_design.JPG"
-                  alt="Custom PCB Design"
-                  className="h-full object-contain"
-                />
+{/* SKILLS */}
+      <Section id="skills" title="Skills" subtitle="Only list what you can defend in an interview.">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {skillGroups.map((g) => (
+            <div key={g.title} className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+              <div className="text-sm font-semibold">{g.title}</div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {g.items.map((s) => (
+                  <Pill key={s}>{s}</Pill>
+                ))}
               </div>
             </div>
-          </div>
+          ))}
         </div>
-      </section>
+      </Section>
 
-      <section id="scarecrow" className="max-w-4xl mx-auto py-8">
-        <h2 className="text-2xl font-semibold mb-4">Advanced Scarecrow 2.0</h2>
-        <div className="border p-4 rounded-xl shadow-sm space-y-4">
-          <p>
-            <strong>Advanced Scarecrow 2.0</strong> is an innovative, sensor-based system developed by me and my team of four to help farmers protect crops from stray animals—without causing them harm. It's a modern reinvention of the traditional scarecrow, combining low-cost hardware with smart sensing and communication.
-          </p>
-          <p>
-            Our system uses <strong>PIR sensors</strong> to detect animal movement, <strong>moisture sensors</strong> to monitor soil health, and <strong>rain sensors</strong> to detect rainfall. These inputs are processed by an <strong>Arduino-based microcontroller</strong>, which controls a buzzer to emit a high-frequency sound that repels animals in a non-harmful way. For alerts, a <strong>SIM800L GSM module</strong> sends emergency messages directly to the farmer’s phone.
-          </p>
-          <p>
-            To ensure energy independence in remote locations, we integrated a <strong>solar panel and rechargeable battery</strong>, making the unit self-sufficient and field-ready.
-          </p>
-          <p>
-            Our prototype demonstrated over <strong>80% effectiveness</strong> in field tests. We presented the project at an <strong>Ideathon organized by the Entrepreneurship Cell in collaboration with IIT Bombay</strong>, where it won the <strong>runner-up prize</strong> for its practical impact and innovation.
-          </p>
-          <p className="text-sm text-gray-600">
-            <strong>Technologies:</strong> Arduino, GSM SIM800L, PIR & Rain Sensors, Moisture Sensor, Solar Panel, Embedded C
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-            <img src="/images/Scarecrow_animated_photo.png" alt="Advanced Scarecrow Conceptual Diagram" className="rounded object-contain bg-white h-64 w-full" />
-            <img src="/images/Scarecrow_team.png" alt="Advanced Scarecrow Team Photo with actual model " className="rounded object-contain bg-white h-64 w-full" />
-            <img src="/images/Scarecrow_Circuit.png" alt="Hardware prototype" className="rounded object-contain bg-white h-64 w-full" />
-            <img src="/images/SMS_alert_screenshot.png" alt="SMS alert screenshot" className="rounded object-contain bg-white h-64 w-full" />
-          </div>
-        </div>
-      </section>
-
-
-      <section id="iitgn"  className="max-w-4xl mx-auto py-8">
-        <h2 className="text-2xl font-semibold mb-4">IITGN Robotics Lab Journey</h2>
-        <div className="border p-4 rounded-xl shadow-sm space-y-6">
-          <div>
-            <h3 className="text-xl font-bold">Research Intern – IIT Gandhinagar</h3>
-            <p className="text-sm text-gray-600">Jan 2023 – Sep 2023</p>
-            <p className="mt-2">
-              I joined the lab under Prof. Madhu Vadali, initially working on firmware for a tendon-driven flexible manipulator in collaboration with PhD student Md Modassir Firdaus. The manipulator's tip was actuated via pulleys controlled by servo motors, with firmware enabling remote-based directional movement.
-            </p>
-            <p className="mt-2">
-              I then developed a compact, TurtleBot-style robot for testing swarm algorithms with PhD student Suraj Borate. I designed and fabricated the chassis, created custom PCBs, and integrated ESP32 for motor control and Raspberry Pi for algorithm execution, ensuring sensor-rich, real-time feedback.
-            </p>
-            <p className="mt-2">
-              My third project involved building a 3D printer capable of using raw plastic waste as filament, guided by PhD scholar Rajdeepsingh Devra. We used a Prusa i3 MK3S+ base, a custom extruder powered by a high-torque DC motor and dual 24V heaters, and a Cytron MDDS30 driver with encoder feedback. I assembled the hardware and optimized Marlin 2.0.9.5 firmware for non-standard control modes.
-            </p>
-            <p className="mt-2">
-              We also co-developed a plastic shredder with a rotating 5mm mesh and IR-sensor-based flow control, delivering regulated flake input to the extruder. This hardware integration ensured consistent filament feed using threshold-based automation.
-            </p>
-          </div>
-
-          <div>
-            <h3 className="text-xl font-bold">Project Assistant – IIT Gandhinagar</h3>
-            <p className="text-sm text-gray-600">Oct 2023 – Apr 2024</p>
-            <p className="mt-2">
-              Promoted to Project Assistant, I focused on advanced experimentation and diagnostics. We enhanced print quality by integrating sensors like current sensors, IMU, and acoustic pickups to classify material types and predict failures. This sensor data helped reduce print errors by 90% while reducing filament cost by 70%.
-            </p>
-            <p className="mt-2">
-              Our enhanced 3D printer handled multiple recycled plastic types (e.g. LDPE, PLA, ABS), including reinforcement experiments with silica gel and iron powder. The resulting prints were stress-tested and achieved a 20% strength gain over standard filament models.
-            </p>
-            <p className="mt-2">
-              After over 8 months of work, we presented our printer at a national competition at IIT Delhi and won the <strong>Best Design Award</strong> for our contribution to sustainable fabrication.
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-              <img src="/images/3dprinter_award.png" alt="Award-winning 3D Printer Setup" className="rounded object-contain bg-white h-64 w-full" />
-              <img src="/images/mini_robot_swarm.jpg" alt="Swarm test robot with custom PCB" className="rounded object-contain bg-white h-64 w-full" />
-              <img src="/images/3dprint_start.jpg" alt="Initial test print from recycled plastic" className="rounded object-contain bg-white h-64 w-full" />
-              <img src="/images/3dprint_closeup.jpg" alt="Close-up of reinforcement print layer" className="rounded object-contain bg-white h-64 w-full" />
+      {/* CONTACT */}
+      <Section id="contact" title="Contact" subtitle="Make it easy to reach you.">
+        <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm text-sm">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <div className="text-xs text-gray-500">Email</div>
+              <a className="text-blue-600 underline underline-offset-4" href="mailto:urvishshah@email.com">
+                urvishshah@email.com
+              </a>
+              <div className="mt-2 text-xs text-gray-500">Replace with your real email.</div>
+            </div>
+            <div>
+              <div className="text-xs text-gray-500">GitHub</div>
+              <a className="text-blue-600 underline underline-offset-4" href="https://github.com/Urvish2001" target="_blank" rel="noreferrer">
+                github.com/Urvish2001
+              </a>
+            </div>
+            <div>
+              <div className="text-xs text-gray-500">Resume</div>
+              <div className="text-gray-700">
+                Put at: <span className="font-mono">public/Urvish_cv.pdf</span>
+              </div>
             </div>
           </div>
         </div>
-      </section>
-   
-      <section id="resume" className="max-w-4xl mx-auto pt-4 pb-4">
-        <h2 className="text-2xl font-semibold mb-4">Resume</h2>
-        <a href="/Urvish_cv.pdf" download className="text-blue-600 underline">
-          Download Resume
-        </a>
-      </section>
+      </Section>
+
+      <footer className="py-10 text-center text-xs text-gray-500">
+        © {new Date().getFullYear()} Urvish Shah
+      </footer>
     </main>
   );
 }
