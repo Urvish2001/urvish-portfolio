@@ -268,10 +268,6 @@ export default function Home() {
       { type: "image", src: "/images/IITGN/Custom_3d_printer.png", alt: "Custom 3D printer using raw plastic as filament" },
       { type: "image", src: "/images/IITGN/3dprint_closeup.jpg", alt: "3D printed Part using Custom 3D printer with raw plastic as filament" },
       { type: "image", src: "/images/IITGN/mini_robot_swarm.jpg", alt: "Custom designed Mini-robot" },
-
-      // Optional videos (uncomment if you have them)
-      // { type: "video", src: "/videos/iitgn_printer_demo.mp4", poster: "/images/iitgn_printer_poster.jpg" },
-      // { type: "video", src: "/videos/iitgn_manipulator_demo.mp4", poster: "/images/iitgn_manipulator_poster.jpg" },
     ],
     []
   );
@@ -280,12 +276,12 @@ export default function Home() {
   const mediaRobocon = useMemo(
     () => [
       // Replace with your real filenames in /public
-      { type: "video", src: "/videos/robocon_demo.mp4", poster: "/images/robocon_poster.jpg" },
-      { type: "image", src: "/images/robocon_robot.png", alt: "Robocon robot (Target/Defensive system)" },
-      { type: "image", src: "/images/robocon_launcher.png", alt: "DAP / pneumatic launching mechanism" },
-
-      // Optional: certificate/award (crop to text, avoid selfie)
-      // { type: "image", src: "/images/robocon_award.png", alt: "Robocon award / ranking proof" },
+      { type: "image", src: "/images/Robocon/team_photo_with_robot.JPG", alt: "Team photo of robots" },
+      { type: "image", src: "/images/Robocon/155.JPG", alt: "Robots Photo" },
+      { type: "image", src: "/images/Robocon/IMG-20240628-WA0013.jpg", alt: "PCB" },
+      { type: "image", src: "/images/Robocon/Passing_and_catching.jpg", alt: "Passing and catching" },
+      { type: "image", src: "/images/Robocon/DAP_photo.JPG", alt: "DAP / pneumatic launching mechanism" },
+      { type: "image", src: "/images/Robocon/Awards_photo.jpg", alt: "Award photo" },
     ],
     []
   );
@@ -880,17 +876,60 @@ export default function Home() {
             <SubProject key={sp.title} title={sp.title} bullets={sp.bullets} />
           ))}
 
-            <div className="mt-4 rounded-xl border border-gray-200 bg-gray-50 p-3 text-xs text-gray-700">
-              <span className="font-semibold">Competition highlights:</span>{" "}
-              Achieved 1st and 2nd runner-up positions at DD Robocon (IIT Delhi) using two independent robot systems
-              (Target Robot + Defensive Robot). Represented India at ABU Robocon 2021 in Jimo, China,
-              securing 9th rank among international teams.
-            {/* </div> */}
-            {/* <span className="font-semibold">Competition highlights:</span> Represented India at ABU Robocon 2021
-            (Jimo, China), placing 9th out of 21 teams from 8 countries; contributed to a system awarded */}
-            Best Design for robot mechanical and system design.
+          <div className="mt-4 rounded-xl border border-gray-200 bg-gray-50 p-3 text-xs text-gray-700">
+            <span className="font-semibold">Competition highlights:</span>{" "}
+            Achieved 1st and 2nd runner-up at DD Robocon (IIT Delhi) with two independent robot systems
+            (Target Robot + Defensive Robot). Represented India at ABU Robocon 2021 (Jimo, China),
+            placing 9th among international teams.
           </div>
+
           <MediaGrid items={mediaRobocon} />
+          <div className="mt-8">
+            <h4 className="text-xl font-semibold mb-4">
+              Real Competition Footage
+            </h4>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl">
+              {/* National Competition */}
+              <div>
+                <div className="mb-2 font-medium text-sm text-gray-800">
+                  National-Level Competition (DD Robocon, IIT Delhi)
+                </div>
+                <div className="aspect-video w-full rounded-lg overflow-hidden border border-gray-300">
+                  <iframe
+                    src="https://www.youtube.com/embed/19KotBhEFhY?start=6"
+                    title="DD Robocon National Competition Match"
+                    className="w-full h-full"
+                    frameBorder="0"
+                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              </div>
+
+              {/* International Competition */}
+              <div>
+                <div className="mb-2 font-medium text-sm text-gray-800">
+                  International Competition (ABU Robocon, Jimo, China)
+                </div>
+                <div className="aspect-video w-full rounded-lg overflow-hidden border border-gray-300">
+                  <iframe
+                    src="https://www.youtube.com/embed/_cP0rByDEkc?start=66"
+                    title="ABU Robocon International Competition Match"
+                    className="w-full h-full"
+                    frameBorder="0"
+                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              </div>
+            </div>
+
+            <p className="mt-3 text-xs text-gray-600 max-w-4xl">
+              Footage from real national and international Robocon matches demonstrating system-level
+              reliability, pneumatic launching, and on-field performance under competitive constraints.
+            </p>
+          </div>
         </Card>
       </Section>
 
