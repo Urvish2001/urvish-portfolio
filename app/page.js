@@ -59,6 +59,9 @@ function VideoOrPlaceholder({ src, poster, className }) {
     <video
       className={className}
       controls
+      autoPlay
+      muted
+      loop
       playsInline
       preload="metadata"
       poster={poster}
@@ -75,12 +78,12 @@ function MediaGrid({ items = [] }) {
   return (
     <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
       {items.map((m) => (
-        <div key={m.src} className="h-44 md:h-48">
+        <div key={m.src} className="h-56 md:h-64">
           {m.type === "video" ? (
             <VideoOrPlaceholder
               src={m.src}
               poster={m.poster}
-              className="h-full w-full rounded-lg object-cover bg-black border border-gray-200"
+              className="h-full w-full rounded-lg object-contain bg-black border border-gray-200"
             />
           ) : (
             <ImageOrPlaceholder
@@ -97,8 +100,8 @@ function MediaGrid({ items = [] }) {
 
 function Section({ id, title, subtitle, children }) {
   return (
-    <section id={id} className="max-w-5xl mx-auto px-4 py-10">
-      <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>
+    <section id={id} className="max-w-6xl mx-auto px-4 py-14">
+      <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">{title}</h2>
       {subtitle ? (
         <p className="mt-1 text-sm text-gray-600 leading-relaxed">{subtitle}</p>
       ) : null}
@@ -238,9 +241,9 @@ export default function Home() {
   // =========================
   const mediaSSL = useMemo(
     () => [
-      { type: "video", src: "/videos/ssl_demo.mp4", poster: "/images/ssl_poster.jpg" },
-      { type: "image", src: "/images/ssl_map.png", alt: "Signal map / field estimate" },
-      { type: "image", src: "/images/ssl_robot_setup.png", alt: "TurtleBot3 Burger + LoRa setup" },
+      { type: "video", src: "/videos/MRS_SSL/ssl_demo.mp4", poster: "/videos/MRS_SSL/ssl_poster.jpg" },
+      { type: "image", src: "/images/MRS_SSL/ssl_map.png", alt: "Signal map / field estimate" },
+      { type: "image", src: "/images/MRS_SSL/ssl_robot_setup.png", alt: "TurtleBot3 Burger + LoRa setup" },
     ],
     []
   );
@@ -526,24 +529,24 @@ export default function Home() {
       },
       {
         title: "Mechanical (supporting)",
-        items: ["CAD (CATIA/NX/SolidWorks)", "Prototyping & assembly", "System integration mindset"],
+        items: ["CAD (SolidWorks)", "Prototyping & assembly", "System integration mindset"],
       },
     ],
     []
   );
 
   return (
-    <main id="top" className="min-h-screen bg-sky-50 text-gray-900">
+    <main id="top" className="min-h-screen bg-sky-50 text-gray-900 text-[15px] md:text-[16px]">
       <Navbar />
 
       {/* HERO */}
-      <section className="max-w-5xl mx-auto px-4 py-10">
+      <section className="max-w-6xl mx-auto px-4 py-14">
         <div className="rounded-2xl border border-gray-200 bg-white p-7 shadow-sm">
-          <h1 className="text-3xl font-semibold tracking-tight">
+          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight">
             Robotics / Mechatronics / Embedded Engineer
           </h1>
           <p className="mt-3 text-sm text-gray-700 leading-relaxed max-w-3xl">
-            Robotics / mechatronics engineer with hands-on experience across embedded hardware, multi-robot autonomy,
+            Robotics engineer with hands-on experience across embedded hardware, multi-robot autonomy,
             and real-world testing. I build systems end-to-end: electronics + sensors → ROS integration → behaviors →
             validation in Gazebo and on hardware. Flagship work includes decentralized multi-robot coordination on
             TurtleBot3 Burger platforms (tested with 4 robots, scalable and fault-tolerant by design).
@@ -564,7 +567,7 @@ export default function Home() {
       <Section
         id="projects"
         title="Flagship projects"
-        subtitle="What recruiters care about: what you built, how it works, what you owned, and how you tested it."
+        subtitle=""
       >
         <div className="grid grid-cols-1 gap-6">
           {/* SSL */}
@@ -784,7 +787,7 @@ export default function Home() {
       <Section
         id="publications"
         title="Publications"
-        subtitle="Technical writing and documented contributions (add PDF/DOI links when available)."
+        subtitle=""
       >
         <div className="grid grid-cols-1 gap-4">
           {publications.map((p) => (
@@ -802,7 +805,7 @@ export default function Home() {
       </Section>
 
 {/* SKILLS */}
-      <Section id="skills" title="Skills" subtitle="Only list what you can defend in an interview.">
+      <Section id="skills" title="Skills" subtitle="">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {skillGroups.map((g) => (
             <div key={g.title} className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
@@ -818,15 +821,15 @@ export default function Home() {
       </Section>
 
       {/* CONTACT */}
-      <Section id="contact" title="Contact" subtitle="Make it easy to reach you.">
+      <Section id="contact" title="Contact" subtitle="">
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm text-sm">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <div className="text-xs text-gray-500">Email</div>
-              <a className="text-blue-600 underline underline-offset-4" href="mailto:urvishshah@email.com">
-                urvishshah@email.com
+              <a className="text-blue-600 underline underline-offset-4" href="mailto:shahurvish2001@gmail.com">
+                shahurvish2001@gmail.com
               </a>
-              <div className="mt-2 text-xs text-gray-500">Replace with your real email.</div>
+              {/* <div className="mt-2 text-xs text-gray-500">Replace with your real email.</div> */}
             </div>
             <div>
               <div className="text-xs text-gray-500">GitHub</div>
@@ -837,7 +840,7 @@ export default function Home() {
             <div>
               <div className="text-xs text-gray-500">Resume</div>
               <div className="text-gray-700">
-                Put at: <span className="font-mono">public/Urvish_cv.pdf</span>
+                <a className="text-blue-600 underline underline-offset-4" href="/Urvish_cv.pdf" target="_blank" rel="noreferrer">Download Resume</a>
               </div>
             </div>
           </div>
